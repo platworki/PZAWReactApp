@@ -1,4 +1,5 @@
 import './App.css'
+import React from "react";
 
 interface interfPoster{
     title: string,
@@ -60,17 +61,48 @@ function Muzyka({title, year, band_name, gatunek, image_src}: musicInterface){
   );
 }
 
+const albums = [
+   <Muzyka title='ride the lightning' year={2001} gatunek='rock' band_name='Metallica' image_src='/metlalica.jpg'></Muzyka>,
+   <Muzyka title='ride the lightning' year={2001} gatunek='rock' band_name='Metallica' image_src='/metlalica.jpg'></Muzyka>,
+   <Muzyka title='ride the lightning' year={2001} gatunek='rock' band_name='Metallica' image_src='/metlalica.jpg'></Muzyka>,
+   <Muzyka title='ride the lightning' year={2001} gatunek='rock' band_name='Metallica' image_src='/metlalica.jpg'></Muzyka>
+];
+
+
+const movies = [
+    <Poster title='jaws' year={2010} image_src='/jaws.jpg'></Poster>,
+    <Poster title='silence of the lambs' year={2005} image_src='/silenceofthelambs.jpg'></Poster>,
+    <Poster title='matrix' year={2014} image_src='/matrix.jpg'></Poster>
+];
+
+interface listInterface{
+    title: string,
+    list: Array<any>
+}
+function ListComponent({title, list}: listInterface) {
+  const [open, setOpen] = React.useState(true);
+  const handleClick = () => {
+    setOpen(!open);
+  };
+  return (
+    <>
+    <h2 onClick={handleClick}>{title} {open ? "▾" : "▸"}</h2>
+    {open && list.map(movie =>
+    movie)
+    }
+    </>
+  );
+}
 
 function App(){
-  return(
-    <div className='library'>
-      <Poster title='jaws' year={2010} image_src='/jaws.jpg'></Poster>
-      <Poster title='silence of the lambs' year={2005} image_src='/silenceofthelambs.jpg'></Poster>
-      <Poster title='matrix' year={2014} image_src='/matrix.jpg'></Poster>
-      <Muzyka title='ride the lightning' year={2001} gatunek='rock' band_name='Metallica' image_src='/metlalica.jpg'></Muzyka>
-      <Muzyka title='ride the lightning' year={2001} gatunek='rock' band_name='Metallica' image_src='/metlalica.jpg'></Muzyka>
-      <Muzyka title='ride the lightning' year={2001} gatunek='rock' band_name='Metallica' image_src='/metlalica.jpg'></Muzyka>
-      <Muzyka title='ride the lightning' year={2001} gatunek='rock' band_name='Metallica' image_src='/metlalica.jpg'></Muzyka>
+  return (
+    <div className='main'>
+      <div className='library'>
+        <ListComponent title={"Filmy"} list={movies}/>
+      </div>
+      <div className='library'>
+        <ListComponent title={"Albumy"} list={albums}/>
+      </div>
     </div>
   );
 }
