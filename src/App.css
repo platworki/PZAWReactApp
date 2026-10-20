@@ -1,0 +1,8 @@
+.library{
+  display:flex;
+  width: 100%;
+  justify-content: space-around;
+  gap:10px;
+  height:auto;
+  flex-wrap: wrap;
+}
