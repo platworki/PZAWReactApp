@@ -1,5 +1,6 @@
 import './App.css'
 import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface MovieInterface{
     title: string,
@@ -9,32 +10,18 @@ interface MovieInterface{
 }
 
 function Movies(props: MovieInterface){
-  let title = props.title;
-  let year = props.year;
-  let image_src = props.image_src;
-  let rating = props.rating;
-
-  return(
-    <>
-    <div style={{
-      display:"flex",
-      flexDirection:"column",
-      border:"1px solid black",
-      padding:"10px"
-    }}>
-      <img src={image_src} style={{
-        width:"100%",
-        minWidth:"100px",
-        maxWidth:"300px"
-      }}/>
-      <h3>{title}</h3>
-      <p>Rok: {year}</p>
-      <p>Rating: {rating}/10</p>
-      {(rating >= 8) && (
-        <label style={{paddingTop: '10px'}}><em>Polecany!</em></label>
-      )}
+  return (
+    <div className="card h-100 shadow-sm">
+      <img src={props.image_src} className="card-img-top" alt={props.title} />
+      <div className="card-body">
+        <h5 className="card-title">{props.title}</h5>
+        <p className="card-text mb-1">Rok: {props.year}</p>
+        <p className="card-text mb-1">Rating: {props.rating}/10</p>
+        {props.rating >= 8 && (
+          <span className="badge bg-success mt-2">Polecany!</span>
+        )}
+      </div>
     </div>
-    </>
   );
 }
 
@@ -66,34 +53,19 @@ interface BookInterface{
 }
 
 function Books(props: BookInterface){
-  let title = props.title;
-  let year = props.year;
-  let image_src = props.image_src;
-  let gatunek = props.gatunek;
-  let page_amount = props.page_amount;
-
-  return(
-    <>
-    <div style={{
-      display:"flex",
-      flexDirection:"column",
-      border:"1px solid black",
-      padding:"10px"
-    }}>
-      <img src={image_src} style={{
-        width:"100%",
-        minWidth:"100px",
-        maxWidth:"300px"
-      }}/>
-      <h3>{title}</h3>
-      <p>Rok: {year}</p>
-      <p>Liczba stron: {page_amount}</p>
-      <p>Gatunek: {gatunek}</p>
-      {(year < 2000) && (
-        <label style={{paddingTop: '10px'}}><em>Klasyka!</em></label>
-      )}
+  return (
+    <div className="card h-100 shadow-sm">
+      <img src={props.image_src} className="card-img-top" alt={props.title} />
+      <div className="card-body">
+        <h5 className="card-title">{props.title}</h5>
+        <p className="card-text mb-1">Rok: {props.year}</p>
+        <p className="card-text mb-1">Liczba stron: {props.page_amount}</p>
+        <p className="card-text mb-1">Gatunek: {props.gatunek}</p>
+        {props.year < 2000 && (
+          <span className="badge bg-secondary mt-2">Klasyka!</span>
+        )}
+      </div>
     </div>
-    </>
   );
 }
 
@@ -125,31 +97,11 @@ interface SongInterface{
 }
 
 function Songs(props: SongInterface){
-  let title = props.title;
-  let year = props.year;
-  let time = props.time;
-  let image_src = props.image_src;
-  
-  return(
-    <>
-    <div style={{
-      display:"flex",
-      flexDirection:"row",
-      justifyContent:"center",
-      alignItems:"center",
-      border:"1px solid black",
-      gap:"10px",
-      paddingLeft:"5px",
-      paddingRight:"5px"
-    }}>
-      <img src={image_src} style={{
-        maxHeight:"60px"
-      }}/>
-      <h4>{title}</h4>
-      <p>Rok: {year}</p>
-      <p>Czas: {time}</p>
+  return (
+    <div className="d-flex justify-content-between align-items-center w-100">
+      <span>{props.title}</span>
+      <span className="text-end text-muted ms-2">{props.time}</span>
     </div>
-    </>
   );
 }
 
@@ -177,49 +129,33 @@ interface AlbumInterface{
 }
 
 function Albums(props: AlbumInterface){
-  let title = props.title;
-  let year = props.year;
-  let image_src = props.image_src;
-  let band_name = props.band_name;
-  let songs = props.songs;
-  let gatunek = props.gatunek;
-
-  return(
-    <>
-    <div style={{
-      display:"flex",
-      flexDirection:"column",
-      border:"1px solid black",
-      padding:"10px"
-    }}>
-      <img src={image_src} style={{
-        width:"100%",
-        minWidth:"100px",
-        maxWidth:"300px",
-        alignSelf:"center"
-      }}/>
-      <h3>{title}</h3>
-      <p>Rok: {year}</p>
-      <p>Zespół: {band_name}</p>
-      <p style={{paddingBottom:"10px"}}>Gatunek: {gatunek}</p>
-      {songs.length > 0 ? 
-        (
-          <table>
+  return (
+    <div className="card h-100 shadow-sm">
+      <img src={props.image_src} className="card-img-top" alt={props.title} />
+      <div className="card-body">
+        <h5 className="card-title">{props.title}</h5>
+        <p className="card-text mb-1">Rok: {props.year}</p>
+        <p className="card-text mb-1">Zespół: {props.band_name}</p>
+        <p className="card-text mb-3">Gatunek: {props.gatunek}</p>
+        
+        {props.songs.length > 0 ? (
+          <table className="table table-striped table-hover mb-0">
             <tbody>
-              {songs.map((songElement, index) => (
+              {props.songs.map((songElement, index) => (
                 <tr key={index}>
-                <td>{index+1}.</td>
-                <td>{songElement}</td>
+                  <td>{index + 1}.</td>
+                  <td>{songElement}</td>
                 </tr>
               ))}
-           </tbody>
-        </table>
-        ) 
-      : (
-        <em>Brak utworów</em>
-      )}
+            </tbody>
+          </table>
+        ) : (
+          <div className="alert alert-warning mb-0" role="alert">
+            Brak utworów
+          </div>
+        )}
+      </div>
     </div>
-    </>
   );
 }
 
@@ -333,26 +269,27 @@ function ListComponent({title, list}: listInterface) {
     setOpen(!open);
   };
   return (
-    <>
-    <div className='library'>
-      <h2 onClick={handleClick} style={{ cursor: "pointer" }}>
-          {title} {open ? "▾" : "▸"}
+    <div className="mb-4">
+      <h2 onClick={handleClick} style={{ cursor: "pointer" }} className="border-bottom pb-2">
+        {title} {open ? "▾" : "▸"}
       </h2>
 
       {open && (
-        <div className="cards-container">
-            {list.map(listItem => listItem)}
+        <div className="row g-3">
+            {list.map((listItem, index) => (
+              <div key={index} className="col-12 col-md-6 col-lg-4">
+                {listItem}
+              </div>
+            ))}
         </div>
-      )
-      }
+      )}
     </div>
-    </>
   );
 }
 
 function App(){
   return (
-    <div className='main'>
+    <div className="container py-4">
       <ListComponent title={"Filmy"} list={movies}/>
       <ListComponent title={"Albumy"} list={albums}/>
       <ListComponent title={"Książki"} list={books}/>
