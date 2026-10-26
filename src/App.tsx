@@ -1,18 +1,18 @@
 import './App.css'
 import React from "react";
 
-interface movieInterface{
+interface MovieInterface{
     title: string,
     year: number,
     rating: number,
     image_src: string
 }
 
-function Movies(props: movieInterface){
+function Movies(props: MovieInterface){
   let title = props.title;
   let year = props.year;
   let image_src = props.image_src;
-//   let rating = props.rating;
+  let rating = props.rating;
 
   return(
     <>
@@ -24,18 +24,40 @@ function Movies(props: movieInterface){
     }}>
       <img src={image_src} style={{
         width:"100%",
-        height:"100%",
         minWidth:"100px",
         maxWidth:"300px"
       }}/>
       <h3>{title}</h3>
       <p>Rok: {year}</p>
+      <p>Rating: {rating}/10</p>
+      {(rating >= 8) && (
+        <label style={{paddingTop: '10px'}}><em>Polecany!</em></label>
+      )}
     </div>
     </>
   );
 }
 
-interface bookInterface{
+const moviesData: MovieInterface[] = [
+    { title: 'silence of the lambs', year: 2005, rating: 6, image_src: '/silenceofthelambs.jpg' },
+    { title: 'jaws', year: 2010, rating: 3, image_src: '/jaws.jpg' },
+    { title: 'matrix', year: 2014, rating: 2, image_src: '/matrix.jpg' },
+    { title: 'metallica', year: 2018, rating: 9, image_src: '/metlalica.jpg' }
+];
+
+moviesData.sort((a,b) => a.title.localeCompare(b.title));
+
+const movies = moviesData.map((movie, index) => (
+    <Movies 
+        key={index}
+        title={movie.title} 
+        year={movie.year} 
+        rating={movie.rating} 
+        image_src={movie.image_src} 
+    />
+));
+
+interface BookInterface{
     title: string,
     year: number,
     page_amount: number,
@@ -43,13 +65,12 @@ interface bookInterface{
     image_src: string
 }
 
-function Books(props: bookInterface){
+function Books(props: BookInterface){
   let title = props.title;
   let year = props.year;
   let image_src = props.image_src;
   let gatunek = props.gatunek;
   let page_amount = props.page_amount;
-//   let rating = props.rating;
 
   return(
     <>
@@ -61,7 +82,6 @@ function Books(props: bookInterface){
     }}>
       <img src={image_src} style={{
         width:"100%",
-        height:"100%",
         minWidth:"100px",
         maxWidth:"300px"
       }}/>
@@ -69,19 +89,42 @@ function Books(props: bookInterface){
       <p>Rok: {year}</p>
       <p>Liczba stron: {page_amount}</p>
       <p>Gatunek: {gatunek}</p>
+      {(year < 2000) && (
+        <label style={{paddingTop: '10px'}}><em>Klasyka!</em></label>
+      )}
     </div>
     </>
   );
 }
 
-interface songInterface{
+const booksData: BookInterface[] = [
+    { title: 'jaws', year: 2010, gatunek: 'rock', page_amount: 100, image_src: '/jaws.jpg'},
+    { title: 'silence of the lambs', year: 1987, gatunek: 'rock', page_amount: 70, image_src: '/silenceofthelambs.jpg'},
+    { title: 'matrix', year: 1999, gatunek: 'rock', page_amount: 120, image_src: '/matrix.jpg'}
+];
+
+booksData.sort((a,b) => a.title.localeCompare(b.title));
+
+const books = booksData.map((book, index) => (
+    <Books 
+        key={index}
+        title={book.title} 
+        year={book.year} 
+        gatunek={book.gatunek}
+        page_amount={book.page_amount}
+        image_src={book.image_src} 
+    />
+));
+
+
+interface SongInterface{
     title: string,
     year: number,
     time: string,
     image_src: string
 }
 
-function Songs(props: songInterface){
+function Songs(props: SongInterface){
   let title = props.title;
   let year = props.year;
   let time = props.time;
@@ -110,7 +153,21 @@ function Songs(props: songInterface){
   );
 }
 
-interface albumInterface{
+const songsData1: SongInterface[] = [
+    { title: 'jaws', year: 2001, time: '12:23', image_src: '/jaws.jpg'},
+    { title: 'ride the lightning', year: 2005, time: '09:01', image_src: '/metlalica.jpg'},
+    { title: 'matrix', year: 2001, time: '03:54', image_src: '/matrix.jpg'}
+];
+const songsData2: SongInterface[] = [
+    { title: 'jaws', year: 2001, time: '12:23', image_src: '/jaws.jpg'},
+    { title: 'ride the lightning', year: 2005, time: '09:01', image_src: '/metlalica.jpg'},
+    { title: 'matrix', year: 2001, time: '03:54', image_src: '/matrix.jpg'},
+    { title: 'ride the lightning', year: 2005, time: '09:01', image_src: '/metlalica.jpg'},
+    { title: 'jaws', year: 2001, time: '12:23', image_src: '/jaws.jpg'},
+    { title: 'jaws', year: 2001, time: '12:23', image_src: '/jaws.jpg'}
+];
+
+interface AlbumInterface{
     title: string,
     year: number,
     band_name: string,
@@ -119,7 +176,7 @@ interface albumInterface{
     image_src: string
 }
 
-function Albums(props: albumInterface){
+function Albums(props: AlbumInterface){
   let title = props.title;
   let year = props.year;
   let image_src = props.image_src;
@@ -137,7 +194,6 @@ function Albums(props: albumInterface){
     }}>
       <img src={image_src} style={{
         width:"100%",
-        height:"100%",
         minWidth:"100px",
         maxWidth:"300px",
         alignSelf:"center"
@@ -146,69 +202,124 @@ function Albums(props: albumInterface){
       <p>Rok: {year}</p>
       <p>Zespół: {band_name}</p>
       <p style={{paddingBottom:"10px"}}>Gatunek: {gatunek}</p>
-      <table>
-        <tbody>
-          {songs.map((songElement, index) => (
-            <tr key={index}>
-              <td>{songElement}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {songs.length > 0 ? 
+        (
+          <table>
+            <tbody>
+              {songs.map((songElement, index) => (
+                <tr key={index}>
+                <td>{index+1}.</td>
+                <td>{songElement}</td>
+                </tr>
+              ))}
+           </tbody>
+        </table>
+        ) 
+      : (
+        <em>Brak utworów</em>
+      )}
     </div>
     </>
   );
 }
 
+const albumsData: AlbumInterface[] = [
+    { 
+        title: 'ride the lightning',
+        year: 2010, 
+        gatunek: 'rock', 
+        band_name: 'Metallica', 
+        image_src: '/silenceofthelambs.jpg', 
+        songs: songsData1.map((song, index) => (
+            <Songs 
+                key={index}
+                title={song.title} 
+                year={song.year} 
+                time={song.time} 
+                image_src={song.image_src}
+            />
+        ))
+    },
+    { 
+        title: 'master of puppets', 
+        year: 1986, 
+        gatunek: 'metal', 
+        band_name: 'Metallica', 
+        image_src: '/metlalica.jpg', 
+        songs: songsData2.map((song, index) => (
+            <Songs 
+                key={index}
+                title={song.title} 
+                year={song.year} 
+                time={song.time} 
+                image_src={song.image_src}
+            />
+        ))
+    },
+    { 
+        title: 'kickstart the heart', 
+        year: 1988, 
+        gatunek: 'metal', 
+        band_name: 'Metallica', 
+        image_src: '/jaws.jpg', 
+        songs: []
+    }
+];
 
-const albums: React.ReactElement[] = [
-   <Albums 
-        title='ride the lightning' 
-        year={2001} 
-        gatunek='rock' 
-        band_name='Metallica' 
-        image_src='/metlalica.jpg'
-        songs={[
-                <Songs title='ride the lightning' 
-                year={2001} 
-                time='12:23'
-                image_src='/jaws.jpg'/>,
-            <Songs title='ride the lightning' 
-                year={2001} 
-                time='12:23'
-                image_src='/metlalica.jpg'/>]
-              }
-    />,
-   <Albums 
-        title='ride the lightning' 
-        year={2001} 
-        gatunek='rock' 
-        band_name='Metallica' 
-        image_src='/metlalica.jpg'
-        songs={[
-                <Songs title='ride the lightning' 
-                year={2001} 
-                time='12:23'
-                image_src='/metlalica.jpg'/>,
-            <Songs title='ride the lightning' 
-                year={2001} 
-                time='12:23'
-                image_src='/metlalica.jpg'/>]
-              }
+albumsData.sort((a, b) => a.title.localeCompare(b.title));
+
+const albums = albumsData.map((album, index) => (
+    <Albums 
+        key={index}
+        title={album.title}
+        year={album.year}
+        band_name={album.band_name}
+        gatunek={album.gatunek}
+        image_src={album.image_src}
+        songs={album.songs}
     />
-];
+));
 
+const moviesAfter2010Data = moviesData.filter(movie => movie.year > 2010);
+moviesAfter2010Data.sort((a, b) => a.title.localeCompare(b.title));
 
-const movies: React.ReactElement[] = [
-    <Movies title='jaws' year={2010} rating={3} image_src='/jaws.jpg'></Movies>,
-    <Movies title='silence of the lambs' year={2005} rating={6} image_src='/silenceofthelambs.jpg'></Movies>,
-    <Movies title='matrix' year={2014} rating={2} image_src='/matrix.jpg'></Movies>
-];
+const moviesAfter2010 = moviesAfter2010Data.map((movie, index) => (
+    <Movies 
+        key={index}
+        title={movie.title} 
+        year={movie.year} 
+        rating={movie.rating} 
+        image_src={movie.image_src} 
+    />
+));
 
-const books: React.ReactElement[] = [
-    <Books title='jaws' year={2010} gatunek='rock' page_amount={100} image_src='/jaws.jpg'></Books>,
-    <Books title='silence of the lambs' gatunek='rock' year={2005} page_amount={100} image_src='/silenceofthelambs.jpg'></Books>,
-    <Books title='matrix' year={2014} gatunek='rock'  page_amount={100} image_src='/matrix.jpg'></Books>
+const sortedBooksData = [...booksData].sort((a, b) => b.year - a.year);
+
+const sortedBooks = sortedBooksData.map((book, index) => (
+    <Books 
+        key={index}
+        title={book.title} 
+        year={book.year} 
+        gatunek={book.gatunek} 
+        page_amount={book.page_amount} 
+        image_src={book.image_src} 
+    />
+));
+
+const maxAlbumData = albumsData.reduce((prev, current) => 
+    prev.songs.length > current.songs.length ? prev : current
+);
+
+const maxAlbum: React.ReactElement[] = [
+    <Albums 
+        key={0}
+        title={maxAlbumData.title}
+        year={maxAlbumData.year}
+        band_name={maxAlbumData.band_name}
+        gatunek={maxAlbumData.gatunek}
+        image_src={maxAlbumData.image_src}
+        songs={maxAlbumData.songs}
+    />
 ];
 
 interface listInterface{
@@ -245,6 +356,9 @@ function App(){
       <ListComponent title={"Filmy"} list={movies}/>
       <ListComponent title={"Albumy"} list={albums}/>
       <ListComponent title={"Książki"} list={books}/>
+      <ListComponent title={"Filmy po 2010"} list={moviesAfter2010}/>
+      <ListComponent title={"Książki posortowane"} list={sortedBooks}/>
+      <ListComponent title={"Największy album"} list={maxAlbum}/>
     </div>
   );
 }
