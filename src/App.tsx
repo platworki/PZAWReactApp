@@ -10,17 +10,25 @@ interface MovieInterface{
 }
 
 function Movies(props: MovieInterface){
+  const handleCardClick = () => {
+    console.log("Wybrano film: " + props.title);
+  };
+  const handleDetailClick = () => {
+    console.log("Pokaż szczegóły dla" + props.title);
+  };
+
   return (
-    <div className="card h-100 shadow-sm">
+    <div className="card h-100 shadow-sm" onClick={handleCardClick} style={{ cursor: "pointer" }}>
       <img src={props.image_src} className="card-img-top" alt={props.title} />
-      <div className="card-body">
-        <h5 className="card-title">{props.title}</h5>
-        <p className="card-text mb-1">Rok: {props.year}</p>
-        <p className="card-text mb-1">Rating: {props.rating}/10</p>
-        {props.rating >= 8 && (
-          <span className="badge bg-success mt-2">Polecany!</span>
-        )}
-      </div>
+        <div className="card-body">
+          <h5 className="card-title">{props.title}</h5>
+          <p className="card-text mb-1">Rok: {props.year}</p>
+          <button type="button" className="btn btn-primary" onClick={handleDetailClick}>Pokaż szczegóły</button>
+          <p className="card-text mb-1" style={{paddingTop:"10px"}}>Rating: {props.rating}/10</p>
+          {props.rating >= 8 && (
+            <span className="badge bg-success mt-2">Polecany!</span>
+          )}
+        </div>
     </div>
   );
 }
@@ -129,6 +137,9 @@ interface AlbumInterface{
 }
 
 function Albums(props: AlbumInterface){
+  const handleSongClick = (songTitle: string) => {
+    console.log("Wybrano utwór: " + songTitle + " z " + props.title);
+  };
   return (
     <div className="card h-100 shadow-sm">
       <img src={props.image_src} className="card-img-top" alt={props.title} />
@@ -142,7 +153,7 @@ function Albums(props: AlbumInterface){
           <table className="table table-striped table-hover mb-0">
             <tbody>
               {props.songs.map((songElement, index) => (
-                <tr key={index}>
+                <tr key={index} onClick={() => handleSongClick(songElement.props.title)} style={{cursor:"pointer"}}>
                   <td>{index + 1}.</td>
                   <td>{songElement}</td>
                 </tr>
@@ -258,16 +269,29 @@ const maxAlbum: React.ReactElement[] = [
     />
 ];
 
-interface listInterface{
+interface ListInterface{
     title: string,
-    list: Array<React.ReactElement>
+    list: Array<React.ReactElement>,
+    inputid: string
 }
 
-function ListComponent({title, list}: listInterface) {
+function ListComponent(props: ListInterface) {
+  let title = props.title;
+  let list = props.list;
+  let inputid = props.inputid;
+
   const [open, setOpen] = React.useState(false);
   const handleClick = () => {
     setOpen(!open);
   };
+
+  const handleWrite = (text : string) => {
+    let p = document.getElementById('livepreview');
+    p!.textContent = text;
+    console.log(text);
+  }
+
+
   return (
     <div className="mb-4">
       <h2 onClick={handleClick} style={{ cursor: "pointer" }} className="border-bottom pb-2">
@@ -276,11 +300,21 @@ function ListComponent({title, list}: listInterface) {
 
       {open && (
         <div className="row g-3">
-            {list.map((listItem, index) => (
-              <div key={index} className="col-12 col-md-6 col-lg-4">
-                {listItem}
-              </div>
-            ))}
+          <div className="inputField">
+            <input 
+              type="text" 
+              onChange={input => handleWrite(input.target.value)} 
+              className="form-control" 
+              placeholder="Wpisz tytuł"
+              id={inputid}/>
+              
+              <p id='livepreview'></p>
+            </div>
+          {list.map((listItem, index) => (
+            <div key={index} className="col-12 col-md-6 col-lg-4">
+              {listItem}
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -290,12 +324,12 @@ function ListComponent({title, list}: listInterface) {
 function App(){
   return (
     <div className="container py-4">
-      <ListComponent title={"Filmy"} list={movies}/>
-      <ListComponent title={"Albumy"} list={albums}/>
-      <ListComponent title={"Książki"} list={books}/>
-      <ListComponent title={"Filmy po 2010"} list={moviesAfter2010}/>
-      <ListComponent title={"Książki posortowane"} list={sortedBooks}/>
-      <ListComponent title={"Największy album"} list={maxAlbum}/>
+      <ListComponent title={"Filmy"} list={movies} inputid={"movie-search"}/>
+      <ListComponent title={"Albumy"} list={albums} inputid={"album-search"}/>
+      <ListComponent title={"Książki"} list={books} inputid={"book-search"}/>
+      <ListComponent title={"Filmy po 2010"} list={moviesAfter2010} inputid={"movie-search"}/>
+      <ListComponent title={"Książki posortowane"} list={sortedBooks} inputid={"book-search"}/>
+      <ListComponent title={"Największy album"} list={maxAlbum} inputid={"album-search"}/>
     </div>
   );
 }
