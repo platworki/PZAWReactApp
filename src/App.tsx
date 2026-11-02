@@ -13,8 +13,10 @@ function Movies(props: MovieInterface){
   const handleCardClick = () => {
     console.log("Wybrano film: " + props.title);
   };
-  const handleDetailClick = () => {
-    console.log("Pokaż szczegóły dla" + props.title);
+
+  const handleDetailClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("Pokaż szczegóły dla " + props.title);
   };
 
   return (
@@ -132,19 +134,21 @@ interface AlbumInterface{
     year: number,
     band_name: string,
     gatunek: string,
-    songs: React.ReactElement[],
+    songs: React.ReactElement<SongInterface>[],
     image_src: string
 }
 
 function Albums(props: AlbumInterface){
-  const handleSongClick = (songTitle: string) => {
-    console.log("Wybrano utwór: " + songTitle + " z " + props.title);
+  let albumTitle = props.title;
+
+  const handleSongClick = (songTitle: React.ReactElement<SongInterface>) => {
+    console.log("Wybrano utwór: " + songTitle.props.title + " z " + albumTitle);
   };
   return (
     <div className="card h-100 shadow-sm">
-      <img src={props.image_src} className="card-img-top" alt={props.title} />
+      <img src={props.image_src} className="card-img-top" alt={albumTitle} />
       <div className="card-body">
-        <h5 className="card-title">{props.title}</h5>
+        <h5 className="card-title">{albumTitle}</h5>
         <p className="card-text mb-1">Rok: {props.year}</p>
         <p className="card-text mb-1">Zespół: {props.band_name}</p>
         <p className="card-text mb-3">Gatunek: {props.gatunek}</p>
@@ -153,7 +157,7 @@ function Albums(props: AlbumInterface){
           <table className="table table-striped table-hover mb-0">
             <tbody>
               {props.songs.map((songElement, index) => (
-                <tr key={index} onClick={() => handleSongClick(songElement.props.title)} style={{cursor:"pointer"}}>
+                <tr key={index} onClick={() => handleSongClick(songElement)} style={{cursor:"pointer"}}>
                   <td>{index + 1}.</td>
                   <td>{songElement}</td>
                 </tr>
@@ -257,7 +261,7 @@ const maxAlbumData = albumsData.reduce((prev, current) =>
     prev.songs.length > current.songs.length ? prev : current
 );
 
-const maxAlbum: React.ReactElement[] = [
+const maxAlbum: React.ReactElement<AlbumInterface>[] = [
     <Albums 
         key={0}
         title={maxAlbumData.title}
@@ -271,31 +275,36 @@ const maxAlbum: React.ReactElement[] = [
 
 interface ListInterface{
     title: string,
-    list: Array<React.ReactElement>,
+    list: Array<React.ReactElement<{title: string}>>,
     inputid: string
 }
 
 function ListComponent(props: ListInterface) {
-  let title = props.title;
+  let listTitle = props.title;
   let list = props.list;
   let inputid = props.inputid;
 
   const [open, setOpen] = React.useState(false);
+
   const handleClick = () => {
     setOpen(!open);
   };
 
+  const [searchText, setSearchText] = React.useState("");
+
   const handleWrite = (text : string) => {
-    let p = document.getElementById('livepreview');
-    p!.textContent = text;
+    setSearchText(text);
     console.log(text);
   }
 
+  const filteredList = list.filter(item => 
+    item.props.title.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <div className="mb-4">
       <h2 onClick={handleClick} style={{ cursor: "pointer" }} className="border-bottom pb-2">
-        {title} {open ? "▾" : "▸"}
+        {listTitle} {open ? "▾" : "▸"}
       </h2>
 
       {open && (
@@ -303,18 +312,24 @@ function ListComponent(props: ListInterface) {
           <div className="inputField">
             <input 
               type="text" 
+              value={searchText}
               onChange={input => handleWrite(input.target.value)} 
               className="form-control" 
               placeholder="Wpisz tytuł"
               id={inputid}/>
-              
-              <p id='livepreview'></p>
+
+              {searchText != "" && (<p className="mt-2 text-muted">Szukasz: {searchText}</p>)}
             </div>
-          {list.map((listItem, index) => (
-            <div key={index} className="col-12 col-md-6 col-lg-4">
-              {listItem}
-            </div>
-          ))}
+
+        {filteredList.length > 0 ? (
+            filteredList.map((listItem, index) => (
+              <div key={index} className="col-12 col-md-6 col-lg-4">
+                {listItem}
+              </div>
+            ))
+          ) : (
+            <p className="text-muted mt-2">Nie znaleziono filmów</p>
+          )}
         </div>
       )}
     </div>
