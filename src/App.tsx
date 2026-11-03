@@ -274,9 +274,9 @@ const maxAlbum: React.ReactElement<AlbumInterface>[] = [
 ];
 
 interface ListInterface{
-    title: string,
-    list: Array<React.ReactElement<{title: string}>>,
-    inputid: string
+  title: string,
+  list: Array<React.ReactElement<{title: string}>>,
+  inputid: string
 }
 
 function ListComponent(props: ListInterface) {
